@@ -16,5 +16,9 @@ func main() {
 }
 
 func helloHandler(w http.ResponseWriter, req *http.Request) {
-	io.WriteString(w, "Hello, world!")
+	if req.Method == http.MethodGet {
+		io.WriteString(w, "Hello, world!")
+	} else {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
 }
