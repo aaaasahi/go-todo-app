@@ -3,18 +3,21 @@ package main
 import (
 	handler "go-todo-app/handlers"
 	"log"
-	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
 func main() {
-	http.HandleFunc("/todos/list", handler.GetTodosHandler)
-	http.HandleFunc("/todos/1", handler.GetTodoHandler)
-	http.HandleFunc("/todos", handler.CreateTodoHandler)
-	http.HandleFunc("/todos/2", handler.UpdateTodoHandler)
-	http.HandleFunc("/todos/3", handler.DeleteTodoHandler)
+	e := echo.New()
+
+	e.GET("/todos/list", handler.GetTodosHandler)
+	e.GET("/todos/1", handler.GetTodoHandler)
+	e.POST("/todos", handler.CreateTodoHandler)
+	e.PUT("/todos/2", handler.UpdateTodoHandler)
+	e.DELETE("/todos/3", handler.DeleteTodoHandler)
+
 	log.Println("server start at port 8080")
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
+	if err := e.Start(":8080"); err != nil {
 		log.Fatal(err)
 	}
 }

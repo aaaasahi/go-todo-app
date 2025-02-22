@@ -1,46 +1,27 @@
 package handler
 
 import (
-	"io"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
-func GetTodosHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodGet {
-		io.WriteString(w, "Get all TODOs!")
-	} else {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-	}
+func GetTodosHandler(c echo.Context) error {
+	return c.String(http.StatusOK, "Get all TODOs!")
 }
 
-func GetTodoHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodGet {
-		io.WriteString(w, "Get TODO with ID 1!")
-	} else {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-	}
+func GetTodoHandler(c echo.Context) error {
+	return c.String(http.StatusOK, "Get TODO with ID 1!")
 }
 
-func CreateTodoHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodPost {
-		io.WriteString(w, "Create new TODO!")
-	} else {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-	}
+func CreateTodoHandler(c echo.Context) error {
+	return c.String(http.StatusOK, "Create new TODO!")
 }
 
-func UpdateTodoHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodPut {
-		io.WriteString(w, "Update TODO with ID 2!")
-	} else {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-	}
+func UpdateTodoHandler(c echo.Context) error {
+	return c.String(http.StatusOK, "Update TODO with ID 2!")
 }
 
-func DeleteTodoHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodDelete {
-		io.WriteString(w, "Delete TODO with ID 3!")
-	} else {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-	}
+func DeleteTodoHandler(c echo.Context) error {
+	return c.String(http.StatusOK, "Delete TODO with ID 3!")
 }
