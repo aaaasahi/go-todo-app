@@ -60,5 +60,8 @@ func DeleteTodoHandler(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid ID format")
 	}
-	return c.String(http.StatusOK, fmt.Sprintf("Delete TODO with ID %d!", id))
+
+	return c.JSON(http.StatusOK, map[string]string{
+		"message": fmt.Sprintf("Todo with ID %d has been deleted", id),
+	})
 }
