@@ -2,6 +2,8 @@ package handler
 
 import (
 	"fmt"
+	"go-todo-app/models"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -9,7 +11,8 @@ import (
 )
 
 func GetTodosHandler(c echo.Context) error {
-	return c.String(http.StatusOK, "Get all TODOs!")
+	todos := []models.Todo{models.Todo1, models.Todo2}
+	return c.JSON(http.StatusOK, todos)
 }
 
 func GetTodoHandler(c echo.Context) error {
@@ -17,11 +20,22 @@ func GetTodoHandler(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid ID format")
 	}
-	return c.String(http.StatusOK, fmt.Sprintf("Get TODO with ID %d!", id))
+
+	// 暫定でログを出力
+	log.Println(id)
+
+	return c.JSON(http.StatusOK, models.Todo1)
 }
 
 func CreateTodoHandler(c echo.Context) error {
-	return c.String(http.StatusOK, "Create new TODO!")
+	var reqTodo models.Todo
+	if err := c.Bind(&reqTodo); err != nil {
+		return c.String(http.StatusInternalServerError, "Failed to parse request body")
+	}
+
+	todo := reqTodo
+
+	return c.JSON(http.StatusOK, todo)
 }
 
 func UpdateTodoHandler(c echo.Context) error {
@@ -29,7 +43,16 @@ func UpdateTodoHandler(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid ID format")
 	}
-	return c.String(http.StatusOK, fmt.Sprintf("Update TODO with ID %d!", id))
+
+	var reqTodo models.Todo
+	if err := c.Bind(&reqTodo); err != nil {
+		return c.String(http.StatusInternalServerError, "Failed to parse request body")
+	}
+
+	todo := reqTodo
+	todo.ID = id
+
+	return c.JSON(http.StatusOK, todo)
 }
 
 func DeleteTodoHandler(c echo.Context) error {
@@ -37,5 +60,8 @@ func DeleteTodoHandler(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid ID format")
 	}
-	return c.String(http.StatusOK, fmt.Sprintf("Delete TODO with ID %d!", id))
+
+	return c.JSON(http.StatusOK, map[string]string{
+		"message": fmt.Sprintf("Todo with ID %d has been deleted", id),
+	})
 }
