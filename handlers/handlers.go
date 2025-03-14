@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"go-todo-app/models"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -10,7 +11,8 @@ import (
 )
 
 func GetTodosHandler(c echo.Context) error {
-	return c.String(http.StatusOK, "Get all TODOs!")
+	todos := []models.Todo{models.Todo1, models.Todo2}
+	return c.JSON(http.StatusOK, todos)
 }
 
 func GetTodoHandler(c echo.Context) error {
@@ -18,7 +20,11 @@ func GetTodoHandler(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid ID format")
 	}
-	return c.String(http.StatusOK, fmt.Sprintf("Get TODO with ID %d!", id))
+
+	// 暫定でログを出力
+	log.Println(id)
+
+	return c.JSON(http.StatusOK, models.Todo1)
 }
 
 func CreateTodoHandler(c echo.Context) error {
