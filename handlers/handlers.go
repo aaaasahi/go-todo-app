@@ -37,7 +37,16 @@ func UpdateTodoHandler(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid ID format")
 	}
-	return c.String(http.StatusOK, fmt.Sprintf("Update TODO with ID %d!", id))
+
+	var reqTodo models.Todo
+	if err := c.Bind(&reqTodo); err != nil {
+		return c.String(http.StatusInternalServerError, "Failed to parse request body")
+	}
+
+	todo := reqTodo
+	todo.ID = id
+
+	return c.JSON(http.StatusOK, todo)
 }
 
 func DeleteTodoHandler(c echo.Context) error {
