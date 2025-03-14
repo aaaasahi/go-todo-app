@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"go-todo-app/models"
 	"net/http"
 	"strconv"
 
@@ -21,7 +22,14 @@ func GetTodoHandler(c echo.Context) error {
 }
 
 func CreateTodoHandler(c echo.Context) error {
-	return c.String(http.StatusOK, "Create new TODO!")
+	var reqTodo models.Todo
+	if err := c.Bind(&reqTodo); err != nil {
+		return c.String(http.StatusInternalServerError, "Failed to parse request body")
+	}
+
+	todo := reqTodo
+
+	return c.JSON(http.StatusOK, todo)
 }
 
 func UpdateTodoHandler(c echo.Context) error {
