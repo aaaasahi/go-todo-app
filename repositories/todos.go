@@ -92,6 +92,7 @@ func CreateTodo(db *sqlx.DB, todo models.Todo) (models.Todo, error) {
 func UpdateTodo(db *sqlx.DB, todo models.Todo) (models.Todo, error) {
 	now := time.Now()
 	params := map[string]interface{}{
+		"id":         todo.ID,
 		"title":      todo.Title,
 		"content":    todo.Content,
 		"updated_at": now,
