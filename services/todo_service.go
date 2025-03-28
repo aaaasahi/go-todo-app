@@ -5,14 +5,16 @@ import (
 	"go-todo-app/repositories"
 )
 
-func (s *TodoService) GetTodoService(id int) (models.Todo, error) {
-	db, err := connectDB()
-	if err != nil {
-		return models.Todo{}, err
-	}
-	defer db.Close()
+type TodoServiceIF interface {
+	GetTodoService(id int) (models.Todo, error)
+	ListTodosService() ([]models.Todo, error)
+	CreateTodoService(todo models.Todo) (models.Todo, error)
+	UpdateTodoService(todo models.Todo) (models.Todo, error)
+	DeleteTodoService(id int) error
+}
 
-	todo, err := repositories.GetTodo(db, id)
+func (s *TodoService) GetTodoService(id int) (models.Todo, error) {
+	todo, err := repositories.GetTodo(s.db, id)
 	if err != nil {
 		return models.Todo{}, err
 	}
@@ -21,13 +23,7 @@ func (s *TodoService) GetTodoService(id int) (models.Todo, error) {
 }
 
 func (s *TodoService) ListTodosService() ([]models.Todo, error) {
-	db, err := connectDB()
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-
-	todos, err := repositories.ListTodos(db)
+	todos, err := repositories.ListTodos(s.db)
 	if err != nil {
 		return nil, err
 	}
@@ -36,13 +32,7 @@ func (s *TodoService) ListTodosService() ([]models.Todo, error) {
 }
 
 func (s *TodoService) CreateTodoService(todo models.Todo) (models.Todo, error) {
-	db, err := connectDB()
-	if err != nil {
-		return models.Todo{}, err
-	}
-	defer db.Close()
-
-	createdTodo, err := repositories.CreateTodo(db, todo)
+	createdTodo, err := repositories.CreateTodo(s.db, todo)
 	if err != nil {
 		return models.Todo{}, err
 	}
@@ -51,13 +41,7 @@ func (s *TodoService) CreateTodoService(todo models.Todo) (models.Todo, error) {
 }
 
 func (s *TodoService) UpdateTodoService(todo models.Todo) (models.Todo, error) {
-	db, err := connectDB()
-	if err != nil {
-		return models.Todo{}, err
-	}
-	defer db.Close()
-
-	updatedTodo, err := repositories.UpdateTodo(db, todo)
+	updatedTodo, err := repositories.UpdateTodo(s.db, todo)
 	if err != nil {
 		return models.Todo{}, err
 	}
@@ -66,13 +50,7 @@ func (s *TodoService) UpdateTodoService(todo models.Todo) (models.Todo, error) {
 }
 
 func (s *TodoService) DeleteTodoService(id int) error {
-	db, err := connectDB()
-	if err != nil {
-		return err
-	}
-	defer db.Close()
-
-	err = repositories.DeleteTodo(db, id)
+	err := repositories.DeleteTodo(s.db, id)
 	if err != nil {
 		return err
 	}

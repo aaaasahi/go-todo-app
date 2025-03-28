@@ -9,7 +9,6 @@ import (
 func NewRouter(ctrl *controllers.TodoController) *echo.Echo {
 	e := echo.New()
 
-	// すべてのルートとコントローラのハンドラメソッドを対応付け
 	e.GET("/todos", ctrl.GetTodosHandler)
 	e.GET("/todos/:id", ctrl.GetTodoHandler)
 	e.POST("/todos", ctrl.CreateTodoHandler)

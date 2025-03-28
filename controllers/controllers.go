@@ -10,13 +10,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// コントローラ構造体：サービスへの依存を内部に保持
 type TodoController struct {
-	service *services.TodoService
+	service services.TodoServiceIF
 }
 
-// コンストラクタ関数：サービス構造体を受け取ってコントローラを生成
-func NewTodoController(s *services.TodoService) *TodoController {
+func NewTodoController(s services.TodoServiceIF) *TodoController {
 	return &TodoController{service: s}
 }
 
