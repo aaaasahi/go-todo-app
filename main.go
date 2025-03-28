@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go-todo-app/controllers"
 	"go-todo-app/services"
 	"log"
 	"os"
@@ -27,15 +28,18 @@ func main() {
 		log.Fatal(err)
 	}
 	defer db.Close()
+	// サービス構造体の初期化（DBを注入）
 	service := services.NewTodoService(db)
+	// コントローラ構造体の初期化（サービスを注入）
+	controller := controllers.NewTodoController(service)
 
 	e := echo.New()
 
-	e.GET("/todos", handler.GetTodosHandler)
-	e.GET("/todos/:id", handler.GetTodoHandler)
-	e.POST("/todos", handler.CreateTodoHandler)
-	e.PUT("/todos/:id", handler.UpdateTodoHandler)
-	e.DELETE("/todos/:id", handler.DeleteTodoHandler)
+	e.GET("/todos", controller.GetTodosHandler)
+	e.GET("/todos/:id", controller.GetTodoHandler)
+	e.POST("/todos", controller.CreateTodoHandler)
+	e.PUT("/todos/:id", controller.UpdateTodoHandler)
+	e.DELETE("/todos/:id", controller.DeleteTodoHandler)
 
 	log.Println("server start at port 8080")
 	if err := e.Start(":8080"); err != nil {
