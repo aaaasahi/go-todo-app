@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 	"go-todo-app/controllers"
+	"go-todo-app/router"
 	"go-todo-app/services"
 	"log"
 	"os"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/labstack/echo/v4"
 )
 
 var (
@@ -33,17 +33,12 @@ func main() {
 	// コントローラ構造体の初期化（サービスを注入）
 	controller := controllers.NewTodoController(service)
 
-	e := echo.New()
-
-	e.GET("/todos", controller.GetTodosHandler)
-	e.GET("/todos/:id", controller.GetTodoHandler)
-	e.POST("/todos", controller.CreateTodoHandler)
-	e.PUT("/todos/:id", controller.UpdateTodoHandler)
-	e.DELETE("/todos/:id", controller.DeleteTodoHandler)
+	// ルータ層にルーティング構築を委譲
+	// ルータ層でEchoとルート設定を生成
+	e := router.NewRouter(controller)
 
 	log.Println("server start at port 8080")
 	if err := e.Start(":8080"); err != nil {
 		log.Fatal(err)
 	}
-
 }
