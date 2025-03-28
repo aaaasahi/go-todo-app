@@ -5,7 +5,7 @@ import (
 	"go-todo-app/repositories"
 )
 
-func GetTodoService(id int) (models.Todo, error) {
+func (s *TodoService) GetTodoService(id int) (models.Todo, error) {
 	db, err := connectDB()
 	if err != nil {
 		return models.Todo{}, err
@@ -20,7 +20,7 @@ func GetTodoService(id int) (models.Todo, error) {
 	return todo, nil
 }
 
-func ListTodosService() ([]models.Todo, error) {
+func (s *TodoService) ListTodosService() ([]models.Todo, error) {
 	db, err := connectDB()
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func ListTodosService() ([]models.Todo, error) {
 	return todos, nil
 }
 
-func CreateTodoService(todo models.Todo) (models.Todo, error) {
+func (s *TodoService) CreateTodoService(todo models.Todo) (models.Todo, error) {
 	db, err := connectDB()
 	if err != nil {
 		return models.Todo{}, err
@@ -50,7 +50,7 @@ func CreateTodoService(todo models.Todo) (models.Todo, error) {
 	return createdTodo, nil
 }
 
-func UpdateTodoService(todo models.Todo) (models.Todo, error) {
+func (s *TodoService) UpdateTodoService(todo models.Todo) (models.Todo, error) {
 	db, err := connectDB()
 	if err != nil {
 		return models.Todo{}, err
@@ -65,7 +65,7 @@ func UpdateTodoService(todo models.Todo) (models.Todo, error) {
 	return updatedTodo, nil
 }
 
-func DeleteTodoService(id int) error {
+func (s *TodoService) DeleteTodoService(id int) error {
 	db, err := connectDB()
 	if err != nil {
 		return err
