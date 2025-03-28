@@ -1,4 +1,4 @@
-package handler
+package controllers
 
 import (
 	"fmt"
@@ -10,21 +10,29 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func GetTodosHandler(c echo.Context) error {
-	todos, err := services.ListTodosService()
+type TodoController struct {
+	service services.TodoServiceIF
+}
+
+func NewTodoController(s services.TodoServiceIF) *TodoController {
+	return &TodoController{service: s}
+}
+
+func (ctrl *TodoController) GetTodosHandler(c echo.Context) error {
+	todos, err := ctrl.service.ListTodosService()
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Failed to fetch todos")
 	}
 	return c.JSON(http.StatusOK, todos)
 }
 
-func GetTodoHandler(c echo.Context) error {
+func (ctrl *TodoController) GetTodoHandler(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid ID format")
 	}
 
-	todo, err := services.GetTodoService(id)
+	todo, err := ctrl.service.GetTodoService(id)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Failed to fetch todo")
 	}
@@ -32,13 +40,13 @@ func GetTodoHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, todo)
 }
 
-func CreateTodoHandler(c echo.Context) error {
+func (ctrl *TodoController) CreateTodoHandler(c echo.Context) error {
 	var reqTodo models.Todo
 	if err := c.Bind(&reqTodo); err != nil {
 		return c.String(http.StatusBadRequest, "Failed to parse request body")
 	}
 
-	createdTodo, err := services.CreateTodoService(reqTodo)
+	createdTodo, err := ctrl.service.CreateTodoService(reqTodo)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Failed to create todo")
 	}
@@ -46,7 +54,7 @@ func CreateTodoHandler(c echo.Context) error {
 	return c.JSON(http.StatusCreated, createdTodo)
 }
 
-func UpdateTodoHandler(c echo.Context) error {
+func (ctrl *TodoController) UpdateTodoHandler(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid ID format")
@@ -58,7 +66,7 @@ func UpdateTodoHandler(c echo.Context) error {
 	}
 
 	reqTodo.ID = id
-	updatedTodo, err := services.UpdateTodoService(reqTodo)
+	updatedTodo, err := ctrl.service.UpdateTodoService(reqTodo)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Failed to update todo")
 	}
@@ -66,13 +74,13 @@ func UpdateTodoHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, updatedTodo)
 }
 
-func DeleteTodoHandler(c echo.Context) error {
+func (ctrl *TodoController) DeleteTodoHandler(c echo.Context) error {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		return c.String(http.StatusBadRequest, "Invalid ID format")
 	}
 
-	if err := services.DeleteTodoService(id); err != nil {
+	if err := ctrl.service.DeleteTodoService(id); err != nil {
 		return c.String(http.StatusInternalServerError, "Failed to delete todo")
 	}
 
